@@ -1,6 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,11 +10,15 @@
 <body style="margin:0; display:flex; align-items:center; flex-direction:column">
 
 
-<div style="padding:2em; background-color:lightblue; display:flex; gap:1em; width:100%; align-items:center">
-    <p style="font-size:2em; font-weight:bold; margin-left:1em;">TaskManager</p>
-    <p>Home</p>
-    <p>Tasks</p>
-    <p>Statistics</p>
+
+<div sec:authorize="isAuthenticated()" style="padding:2em; background-color:lightblue; display:flex; gap:1em; width:100%; align-items:center">
+    <p style="font-size:2em; font-weight:bold; margin-left:1em;"> <a style="text-decoration:none;" th:href="@{/}">TaskManager</a></p>
+    <a th:href="@{/tasks}">Tasks</a>
+    <a th:href="@{/statistics}">Statistics</a>
+</div>
+
+<div sec:authorize="isAnonymous()">
+
 </div>
 
 

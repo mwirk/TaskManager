@@ -36,6 +36,14 @@ public class TaskService {
 
         return userRepository.save(user);
     }
+    public List<Task> findTaskByUser(User user){
+        if (user == null) {
+            throw new IllegalArgumentException("User is null");
+        }
+        List<Task> tasks = taskRepository.findByUserId(user);
+        return tasks;
+
+    }
 
     public List<Task> findByStatusAndCategory(Status status, Category categoryId) {
         if (categoryId != null) {

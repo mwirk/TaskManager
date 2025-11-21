@@ -7,6 +7,7 @@ import com.taskmanager.org.exception.UserNotFoundException;
 import com.taskmanager.org.model.User;
 import com.taskmanager.org.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import java.util.List;
@@ -21,6 +22,7 @@ public class UserController {
         this.userService = userService;
 
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers(
             @RequestParam(required = false) String email) {
@@ -55,6 +57,7 @@ public class UserController {
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{email}")
     public ResponseEntity<UserDTO> removeUser(@PathVariable String email) {
         List<User> users = userService.findByEmail(email);

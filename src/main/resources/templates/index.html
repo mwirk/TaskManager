@@ -10,7 +10,7 @@
 </head>
 <body>
     <div layout:fragment="content">
-        <div sec:authorize="isAnonymous()">
+        <div sec:authorize="!isAuthenticated()">
             <a th:href="@{/login}">Login</a>
             <a th:href="@{/register}">Register</a>
         </div>

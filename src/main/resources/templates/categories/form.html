@@ -1,0 +1,35 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TaskManager</title>
+</head>
+<body>
+<div layout:fragment="content" style="max-width: 600px; margin: 2em auto;">
+    <h2>Add new task</h2>
+
+    <div th:if="${error}" style="color: red;" th:text="${error}"></div>
+    <div th:if="${success}" style="color: green;" th:text="${success}"></div>
+
+    <form th:action="@{/categories/add}" method="post" style="display: flex; flex-direction: column; gap: 1em;">
+
+        <label>
+            Title:
+            <input type="text" name="name" placeholder="Learn for exam" required>
+        </label>
+
+        <label>
+            Color:
+        <input type="color" name="color" value="#ff0000" required>
+        </label>
+
+        <button type="submit" style="padding: 0.5em 1em; background-color: lightblue; border: none; cursor: pointer;">
+            Add category
+        </button>
+    </form>
+</div>
+</body>
+</html>

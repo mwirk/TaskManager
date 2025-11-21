@@ -10,6 +10,7 @@ import com.taskmanager.org.service.TaskService;
 import com.taskmanager.org.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public class TaskController {
         this.taskService = taskService;
         this.userService = userService;
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<TaskDTO>> getAllTasks(
             @RequestParam(required = false) Status status,
