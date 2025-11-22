@@ -4,31 +4,78 @@
     <meta charset="UTF-8">
     <title>Register</title>
 </head>
-<body>
 
-<h2>Register</h2>
+<body style="font-family: Arial, sans-serif; background:#f0f4f8; margin:0;">
 
-<form th:action="@{/register}" method="post" th:object="${user}">
-    <div>
-        <label>Name:</label>
-        <input type="text" th:field="*{name}" required>
+<div style="
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+">
+
+    <div style="
+        background:white;
+        padding:2em 3em;
+        border-radius:12px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.1);
+        width:350px;
+        text-align:center;
+    ">
+
+        <h2 style="margin-bottom:1em; font-size:26px; color:#333;">
+            Register
+        </h2>
+
+        <form th:action="@{/register}" method="post" th:object="${user}"
+              style="display:flex; flex-direction:column; gap:1em; width:100%;">
+
+            <div style="text-align:left;">
+                <input type="text" th:field="*{name}" required placeholder="Name"
+                       style="padding:0.7em; border:1px solid #ccc; border-radius:6px; width:100%; font-size:14px;">
+            </div>
+
+            <div style="text-align:left;">
+
+                <input type="email" th:field="*{email}" required placeholder="Email"
+                       style="padding:0.7em; border:1px solid #ccc; border-radius:6px; width:100%; font-size:14px;">
+            </div>
+
+            <div style="text-align:left;">
+                <input type="password" th:field="*{password}" required placeholder="Password"
+                       style="padding:0.7em; border:1px solid #ccc; border-radius:6px; width:100%; font-size:14px;">
+            </div>
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <button type="submit"
+                    style="
+                        padding:0.7em;
+                        background:#6ec1e4;
+                        border:none;
+                        border-radius:6px;
+                        cursor:pointer;
+                        font-weight:bold;
+                        color:white;
+                        font-size:15px;
+                        transition: background 0.2s;
+                    "
+                    onmouseover="this.style.background='#5ab3d6';"
+                    onmouseout="this.style.background='#6ec1e4';">
+                Register
+            </button>
+        </form>
+
+        <p style="margin-top:1.2em; font-size:14px; color:#444;">
+            Already have an account?
+            <a th:href="@{/login}" style="color:#4a90e2; text-decoration:none; font-weight:bold;">
+                Login
+            </a>
+        </p>
     </div>
 
-    <div>
-        <label>Email:</label>
-        <input type="email" th:field="*{email}" required>
-    </div>
-
-    <div>
-        <label>Password:</label>
-        <input type="password" th:field="*{password}" required>
-    </div>
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-    <button type="submit">Register</button>
-</form>
-
-<p>Already have an account? <a th:href="@{/login}">Login</a></p>
+</div>
 
 </body>
 </html>

@@ -42,7 +42,8 @@ public class CategoryViewController {
     public String createDepartment(
             @RequestParam("name") String name,
             @RequestParam("color") String color,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
 
         if (name == null || name.trim().isEmpty()) {
@@ -59,7 +60,6 @@ public class CategoryViewController {
         categoryService.addNewCategory(category);
 
         redirectAttributes.addFlashAttribute("success", "Category added successfully");
-
         return "redirect:/tasks/add";
     }
 }

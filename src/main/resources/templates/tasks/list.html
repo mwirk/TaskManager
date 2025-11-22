@@ -1,46 +1,139 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">>
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Your tasks</title>
 </head>
-<body>
-<div layout:fragment="content" style="max-width: 800px; margin: 2em auto;">
-    <h2>Your tasks</h2>
 
-    <a href="/tasks/add" style="display: inline-block; margin-bottom: 1em;">+ Add new task</a>
+<body style="font-family: Arial, sans-serif; background: #f5f7fa; margin: 0;">
 
-    <table border="1" cellpadding="8" cellspacing="0" style="width: 100%;">
+<div layout:fragment="content"
+     style="max-width: 900px; margin: 2em auto; background: white; padding: 2em; border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+    <h2 style="text-align:center; margin-bottom: 1.5em; font-size: 26px; color: #333;">Your tasks</h2>
+
+
+    <div style="display:flex; gap: 1em; margin-bottom: 1.5em;">
+        <a href="/tasks/add">
+            <button type="button"
+                    style="padding: 0.6em 1.2em; background: #6ec1e4; border: none; border-radius: 6px;
+                           cursor: pointer; color: white; font-weight: bold;">
+                + Add new task
+            </button>
+        </a>
+
+        <a th:href="@{/categories/add}">
+            <button type="button"
+                    style="padding: 0.6em 1.2em; background: #6ec1e4; border: none; border-radius: 6px;
+                           cursor: pointer; color: white; font-weight: bold;">
+                + Add new category
+            </button>
+        </a>
+    </div>
+
+
+    <form th:action="@{/tasks}" method="get"
+          style="display:flex; flex-wrap:wrap; gap: 1em; background:#f0f4f8; padding:1em;
+                 border-radius: 8px; margin-bottom: 1.5em;">
+
+        <label style="display:flex; flex-direction:column; font-weight: bold;">
+            Title:
+            <input type="text" name="title"
+                   style="padding:0.4em; border:1px solid #ccc; border-radius:6px;">
+        </label>
+
+        <label style="display:flex; flex-direction:column; font-weight: bold;">
+            Category:
+            <select name="category"
+                    style="padding:0.4em; border:1px solid #ccc; border-radius:6px;">
+                <option value="">-- choose category --</option>
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.id}"
+                        th:text="${cat.name}">
+                </option>
+            </select>
+        </label>
+
+        <label style="display:flex; flex-direction:column; font-weight: bold;">
+            Status:
+            <select name="status"
+                    style="padding:0.4em; border:1px solid #ccc; border-radius:6px;">
+                <option value="">-- choose status --</option>
+                <option th:each="status : ${statuses}"
+                        th:value="${status}"
+                        th:text="${status}">
+                </option>
+            </select>
+        </label>
+
+        <button type="submit"
+                style="padding:0.6em 1em; background:#4caf50; color:white; border:none; border-radius:6px;
+                       cursor:pointer; font-weight:bold; align-self:flex-end;">
+            Search
+        </button>
+    </form>
+
+
+    <table cellpadding="8" cellspacing="0"
+           style="width: 100%; border-collapse: collapse; font-size: 15px;">
+
         <thead>
-        <tr>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Status</th>
-            <th>Due date</th>
-
+        <tr style="background: #e3eaf3; text-align:left; border-bottom: 2px solid #ccc;">
+            <th style="padding: 12px;">Title</th>
+            <th style="padding: 12px;">Category</th>
+            <th style="padding: 12px;">Status</th>
+            <th style="padding: 12px;">Due date</th>
+            <th style="padding: 12px;"></th>
+            <th style="padding: 12px;"></th>
         </tr>
         </thead>
+
         <tbody>
-        <tr th:each="task : ${tasks}">
-            <td th:text="${task.title}"></td>
-            <td th:style="'background-color:' + ${task.categoryId.color}">
+        <tr th:each="task : ${tasks}"
+            style="border-bottom:1px solid #ddd; transition: background 0.2s;"
+            onmouseover="this.style.background='#f7f9fc';"
+            onmouseout="this.style.background='white';">
+
+            <td th:text="${task.title}" style="padding: 12px;"></td>
+
+            <td th:style="'padding:12px; background-color:' + ${task.categoryId.color}">
                 <span th:text="${task.categoryId.name}"></span>
             </td>
-            <td th:text="${task.status}"></td>
-            <td th:text="${task.dueDate}"></td>
 
-            <td>
-                <form th:action="@{'/tasks/delete/' + ${task.id}}" method="post">
+            <td th:text="${task.status}" style="padding: 12px;"></td>
+            <td th:text="${#temporals.format(task.dueDate, 'dd.MM.yyyy HH:mm')}"
+                style="padding: 12px;"></td>
+
+
+            <td style="padding: 12px;">
+                <form th:action="@{'/tasks/edit/' + ${task.id}}" method="get">
                     <button type="submit"
-                            style="padding: 0.5em 1em; background-color: #ff6666; border: none; cursor: pointer;">
+                            style="padding:0.4em 0.8em; background:#ffd966; border:none; border-radius:6px;
+                                   cursor:pointer; font-weight:bold;">
+                        Edit
+                    </button>
+                </form>
+            </td>
+
+
+            <td style="padding: 12px;">
+                <form th:action="@{'/tasks/delete/' + ${task.id}}" method="post" style="display:inline-block">
+                    <button type="submit"
+                            style="padding:0.4em 0.8em; background:#ff6b6b; border:none; border-radius:6px;
+                                   cursor:pointer; font-weight:bold; color:white;">
                         Delete
                     </button>
                 </form>
             </td>
+
         </tr>
         </tbody>
     </table>
+
+</div>
+
 </body>
 </html>

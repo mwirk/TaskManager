@@ -2,28 +2,70 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title layout:title-pattern="$CONTENT_TITLE">TaskManager</title>
 </head>
-<body style="margin:0; display:flex; align-items:center; flex-direction:column">
+
+<body style="margin:0; box-sizing: border-box; font-family: Arial, sans-serif; background:#f0f4f8;">
 
 
+<div sec:authorize="isAuthenticated()"
+     style="
+         background:#6ec1e4;
+         padding: 2em 2em;
+         display:flex;
+         align-items:center;
+         gap:2em;
+     ">
 
-<div sec:authorize="isAuthenticated()" style="padding:2em; background-color:lightblue; display:flex; gap:1em; width:100%; align-items:center">
-    <p style="font-size:2em; font-weight:bold; margin-left:1em;"> <a style="text-decoration:none;" th:href="@{/}">TaskManager</a></p>
-    <a th:href="@{/tasks}">Tasks</a>
-    <a th:href="@{/statistics}">Statistics</a>
+    <p style="font-size:1.6em; font-weight:bold; margin:0;">
+        <a style="text-decoration:none; color:black;" th:href="@{/}">TaskManager</a>
+    </p>
+
+    <a th:href="@{/tasks}"
+       style="color:black; font-weight:bold; text-decoration:none; font-size:1.1em;">
+        Tasks
+    </a>
+
+    <a th:href="@{/statistics}"
+       style="color:black; font-weight:bold; text-decoration:none; font-size:1.1em;">
+        Statistics
+    </a>
+
+    <form th:action="@{/logout}" method="post" style="margin-left:auto;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit"
+                style="
+                    padding:0.5em 1em;
+                    background:white;
+                    color:#333;
+                    border:none;
+                    border-radius:6px;
+                    cursor:pointer;
+                    font-weight:bold;
+                "
+                onmouseover="this.style.background='#e6e6e6';"
+                onmouseout="this.style.background='white';">
+            Logout
+        </button>
+    </form>
 </div>
 
-<div sec:authorize="isAnonymous()">
 
-</div>
+<div sec:authorize="isAnonymous()"></div>
 
 
-<main layout:fragment="content" style="width:100%; padding:1em;">
-
+<main layout:fragment="content"
+      style="
+          width:100%;
+          padding:2em;
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+      ">
 </main>
 
 </body>

@@ -32,30 +32,52 @@ public class TaskViewController {
     }
 
     @GetMapping
-    public String tasksPage(Model model) {
+    public String tasksPage(@RequestParam(required = false) String title,
+                            @RequestParam(required = false) Category category,
+                            @RequestParam(required = false) Status status,
+                            Model model) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.findByEmail(username).getFirst();
+
         List<Task> tasks = taskService.findTaskByUser(user);
 
-        List<TaskViewDTO> taskViewDTOS = new ArrayList<>();
-        for (Task task : tasks) {
-            TaskViewDTO dto = new TaskViewDTO(
-                    task.getId(),
-                    task.getTitle(),
-                    task.getDescription(),
-                    task.getStatus(),
-                    task.getDueDate(),
-                    task.getCategoryId(),
-                    task.getCreatedAt(),
-                    task.getUpdatedAt(),
-                    task.getUserId()
-
-            );
-            taskViewDTOS.add(dto);
+        if (title != null && !title.isBlank()) {
+            tasks = tasks.stream()
+                    .filter(t -> t.getTitle().toLowerCase().contains(title.toLowerCase()))
+                    .toList();
         }
 
-        model.addAttribute("tasks", taskViewDTOS);
+        if (category != null) {
+            tasks = tasks.stream()
+                    .filter(t -> t.getCategoryId().getId() == category.getId())
+                    .toList();
+        }
+        if (status != null){
+            tasks = tasks.stream()
+                    .filter(t -> t.getStatus() == status)
+                    .toList();
+        }
+
+        List<TaskViewDTO> dtos = tasks.stream()
+                .map(task -> new TaskViewDTO(
+                        task.getId(),
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.getStatus(),
+                        task.getDueDate(),
+                        task.getCategoryId(),
+                        task.getCreatedAt(),
+                        task.getUpdatedAt(),
+                        task.getUserId()
+                ))
+                .toList();
+
+        model.addAttribute("categories", categoryService.findAllCategories());
+        model.addAttribute("tasks", dtos);
+        model.addAttribute("statuses", Status.values());
+
         return "tasks/list";
     }
     @GetMapping("/add")
@@ -63,6 +85,7 @@ public class TaskViewController {
         model.addAttribute("task", new TaskViewDTO());
         List<Category> categories = categoryService.findAllCategories();
         model.addAttribute("categories", categories);
+        model.addAttribute("statuses", Status.values());
         return "tasks/form";
     }
 
@@ -105,6 +128,50 @@ public class TaskViewController {
     public String deleteTask(@PathVariable int id, RedirectAttributes redirectAttributes) {
         taskService.removeTask(taskService.findTaskById(id).getFirst());
         redirectAttributes.addFlashAttribute("success", "Task deleted");
+        return "redirect:/tasks";
+    }
+    @GetMapping("/edit/{id}")
+    public String getEditForm(@PathVariable int id,Model model){
+        Task task = taskService.findTaskById(id).getFirst();
+        List<Category> categories = categoryService.findAllCategories();
+        model.addAttribute("categories", categories);
+        model.addAttribute("task", task);
+        model.addAttribute("statuses", Status.values());
+        return "tasks/editForm";
+    }
+    @PostMapping("/edit/{id}")
+    public String changeTask(@PathVariable int id,
+                             @RequestParam("title") String title,
+                             @RequestParam("description") String description,
+                             @RequestParam("category") Category category,
+                             @RequestParam("status") Status status,
+                             @RequestParam("dueDate") LocalDateTime dueDate,
+                             RedirectAttributes redirectAttributes) {
+        if (title == null || title.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Title is required");
+            return "redirect:/tasks/edit/" + id;
+        }
+        if (description == null || description.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Description is required");
+            return "redirect:/tasks/edit/" + id;
+        }
+        if (category == null) {
+            redirectAttributes.addFlashAttribute("error", "Category is required");
+            return "redirect:/tasks/edit/" + id;
+        }
+        if (dueDate == null) {
+            redirectAttributes.addFlashAttribute("error", "Due date is required");
+            return "redirect:/tasks/edit/" + id;
+        }
+        Task task = taskService.findTaskById(id).getFirst();
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setCategoryId(category);
+        task.setDueDate(dueDate);
+        task.setUpdatedAt(LocalDateTime.now());
+        task.setStatus(status);
+        taskService.save(task);
+        redirectAttributes.addFlashAttribute("success", "Task edited");
         return "redirect:/tasks";
     }
 }

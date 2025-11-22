@@ -7,29 +7,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TaskManager</title>
 </head>
-<body>
-<div layout:fragment="content" style="max-width: 600px; margin: 2em auto;">
-    <h2>Add new task</h2>
 
-    <div th:if="${error}" style="color: red;" th:text="${error}"></div>
-    <div th:if="${success}" style="color: green;" th:text="${success}"></div>
+<body style="font-family: Arial, sans-serif; margin:0">
 
-    <form th:action="@{/tasks/add}" method="post" style="display: flex; flex-direction: column; gap: 1em;">
+<div layout:fragment="content"
+     style="
+        max-width: 600px;
+        margin: 2em auto;
+        background:white;
+        padding:2em 2.5em;
+        border-radius:12px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.1);
+     ">
 
-        <label>
+    <h2 style="text-align:center; font-size:26px; color:#333; margin-bottom:1em;">
+        Add new task
+    </h2>
+
+    <!-- Alerts -->
+    <div th:if="${error}"
+         style="color: #d9534f; background:#fbeaea; padding:0.8em; border-radius:6px; margin-bottom:1em;"
+         th:text="${error}">
+    </div>
+
+    <div th:if="${success}"
+         style="color: #28a745; background:#e6f5ea; padding:0.8em; border-radius:6px; margin-bottom:1em;"
+         th:text="${success}">
+    </div>
+
+    <!-- FORM -->
+    <form th:action="@{/tasks/add}"
+          method="post"
+          style="display:flex; flex-direction:column; gap:1em;">
+
+        <!-- Title -->
+        <label style="font-weight:bold;">
             Title:
-            <input type="text" name="title" placeholder="Learn for exam" required>
+            <input type="text" name="title" placeholder="Learn for exam" required
+                   style="
+                        margin-top:0.3em;
+                        padding:0.7em;
+                        border:1px solid #ccc;
+                        border-radius:6px;
+                        width:100%;
+                   ">
         </label>
 
-        <label>
+        <!-- Description -->
+        <label style="font-weight:bold;">
             Description:
-            <input type="text" name="description" placeholder="Revising knowledge about prehistoric civilizations for history exam" required>
+            <input type="text" name="description"
+                   placeholder="Revising knowledge about prehistoric civilizations"
+                   required
+                   style="
+                        margin-top:0.3em;
+                        padding:0.7em;
+                        border:1px solid #ccc;
+                        border-radius:6px;
+                        width:100%;
+                   ">
         </label>
 
-        <label>
+        <!-- Category -->
+        <label style="font-weight:bold;">
             Category:
-            <a th:href="@{/categories/add}">+ Add new one</a>
-            <select name="category" required>
+            <a th:href="@{/categories/add}"
+               style="margin-left:0.5em; font-size:0.9em; color:#4a90e2; text-decoration:none; font-weight:normal;">
+                + Add new one
+            </a>
+
+            <select name="category"
+                    style="
+                        margin-top:0.3em;
+                        padding:0.7em;
+                        border:1px solid #ccc;
+                        border-radius:6px;
+                        width:100%;
+                    ">
                 <option value="">-- choose category --</option>
                 <option th:each="cat : ${categories}"
                         th:value="${cat.id}"
@@ -38,15 +92,59 @@
             </select>
         </label>
 
-        <label>
-            Due date:
-            <input type="datetime-local" name="dueDate" required>
+        <!-- Status -->
+        <label style="font-weight:bold;">
+            Status:
+            <select name="status"
+                    style="
+                        margin-top:0.3em;
+                        padding:0.7em;
+                        border:1px solid #ccc;
+                        border-radius:6px;
+                        width:100%;
+                    ">
+                <option value="">-- choose status --</option>
+                <option th:each="status : ${statuses}"
+                        th:value="${status}"
+                        th:text="${status}">
+                </option>
+            </select>
         </label>
 
-        <button type="submit" style="padding: 0.5em 1em; background-color: lightblue; border: none; cursor: pointer;">
+        <!-- Due Date -->
+        <label style="font-weight:bold;">
+            Due date:
+            <input type="datetime-local" name="dueDate" required
+                   style="
+                        margin-top:0.3em;
+                        padding:0.7em;
+                        border:1px solid #ccc;
+                        border-radius:6px;
+                        width:100%;
+                   ">
+        </label>
+
+        <!-- Submit -->
+        <button type="submit"
+                style="
+                    margin-top:0.5em;
+                    padding:0.8em;
+                    background:#6ec1e4;
+                    color:white;
+                    font-weight:bold;
+                    border:none;
+                    border-radius:6px;
+                    cursor:pointer;
+                    font-size:15px;
+                    transition: background 0.2s;
+                "
+                onmouseover="this.style.background='#5ab3d6';"
+                onmouseout="this.style.background='#6ec1e4';">
             Add task
         </button>
+
     </form>
 </div>
+
 </body>
 </html>

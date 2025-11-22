@@ -76,4 +76,8 @@ public class TaskService {
     public List<Task> findTaskById(Integer id) {
         return taskRepository.findTaskById(id);
     }
+
+    public void save(Task task) {
+        taskRepository.save(task);
+    }
 }

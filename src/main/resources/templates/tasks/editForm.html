@@ -21,7 +21,7 @@
      ">
 
     <h2 style="text-align:center; font-size:26px; color:#333; margin-bottom:1em;">
-        Add new category
+        Edit task
     </h2>
 
 
@@ -36,14 +36,14 @@
     </div>
 
 
-    <form th:action="@{/categories/add}"
+    <form th:action="@{/tasks/edit/{id}(id=${task.id})}"
           method="post"
           style="display:flex; flex-direction:column; gap:1em;">
 
 
         <label style="font-weight:bold;">
             Title:
-            <input type="text" name="name" placeholder="School, Work, Hobby..." required
+            <input type="text" name="title" th:value="${task.title}" required
                    style="
                        margin-top:0.3em;
                        padding:0.7em;
@@ -55,16 +55,65 @@
 
 
         <label style="font-weight:bold;">
-            Color:
-            <input type="color" name="color" value="#ff0000" required
+            Description:
+            <input type="text" name="description" th:value="${task.description}" required
                    style="
-                       margin-top:0.5em;
-                       width:80px;
-                       height:40px;
-                       padding:0;
+                       margin-top:0.3em;
+                       padding:0.7em;
                        border:1px solid #ccc;
                        border-radius:6px;
-                       cursor:pointer;
+                       width:100%;
+                   ">
+        </label>
+
+
+        <label style="font-weight:bold;">
+            Category:
+            <select name="category" required
+                    style="
+                        margin-top:0.3em;
+                        padding:0.7em;
+                        border:1px solid #ccc;
+                        border-radius:6px;
+                        width:100%;
+                    ">
+                <option value="">-- choose category --</option>
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.id}"
+                        th:text="${cat.name}">
+                </option>
+            </select>
+        </label>
+
+
+        <label style="font-weight:bold;">
+            Status:
+            <select name="status" required
+                    style="
+                        margin-top:0.3em;
+                        padding:0.7em;
+                        border:1px solid #ccc;
+                        border-radius:6px;
+                        width:100%;
+                    ">
+                <option value="">-- choose status --</option>
+                <option th:each="status : ${statuses}"
+                        th:value="${status}"
+                        th:text="${status}">
+                </option>
+            </select>
+        </label>
+
+
+        <label style="font-weight:bold;">
+            Due date:
+            <input type="datetime-local" name="dueDate" th:value="${task.dueDate}" required
+                   style="
+                       margin-top:0.3em;
+                       padding:0.7em;
+                       border:1px solid #ccc;
+                       border-radius:6px;
+                       width:100%;
                    ">
         </label>
 
@@ -84,11 +133,10 @@
                 "
                 onmouseover="this.style.background='#5ab3d6';"
                 onmouseout="this.style.background='#6ec1e4';">
-            Add category
+            Edit task
         </button>
 
     </form>
-
 </div>
 
 </body>
