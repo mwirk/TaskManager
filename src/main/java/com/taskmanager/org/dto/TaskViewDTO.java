@@ -17,6 +17,7 @@ public class TaskViewDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private User userId;
+    private float donePercentage;
 
     public TaskViewDTO() {}
 
@@ -28,7 +29,8 @@ public class TaskViewDTO {
                        Category categoryId,
                        LocalDateTime createdAt,
                        LocalDateTime updatedAt,
-                       User userId) {
+                       User userId,
+                       float donePercentage) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -38,6 +40,7 @@ public class TaskViewDTO {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.userId = userId;
+        this.donePercentage = donePercentage;
     }
 
     public Integer getId() {
@@ -74,5 +77,13 @@ public class TaskViewDTO {
 
     public User getUserId() {
         return userId;
+    }
+
+    public float getDonePercentage() {
+        return donePercentage;
+    }
+
+    public void setDonePercentage(float donePercentage) {
+        this.donePercentage = donePercentage;
     }
 }

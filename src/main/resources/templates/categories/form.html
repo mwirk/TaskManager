@@ -5,87 +5,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TaskManager</title>
+    <title>Add Category</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body style="font-family: Arial, sans-serif; margin: 0;">
+<body style="font-family: Arial, sans-serif; margin:0;">
 
-<div layout:fragment="content"
-     style="
-        max-width: 600px;
-        margin: 2em auto;
-        background:white;
-        padding:2em 2.5em;
-        border-radius:12px;
-        box-shadow:0 4px 12px rgba(0,0,0,0.1);
-     ">
+<div layout:fragment="content" class="container my-4 p-4 bg-white rounded shadow-sm" style="max-width:600px;">
 
-    <h2 style="text-align:center; font-size:26px; color:#333; margin-bottom:1em;">
-        Add new category
-    </h2>
+    <h2 class="text-center mb-4" style="font-size:26px; color:#333;">Add new category</h2>
 
+    <!-- Error / Success Messages -->
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 
-    <div th:if="${error}"
-         style="color: #d9534f; background:#fbeaea; padding:0.8em; border-radius:6px; margin-bottom:1em;"
-         th:text="${error}">
-    </div>
+    <!-- Add Category Form -->
+    <form th:action="@{/categories/add}" method="post" class="row g-3">
 
-    <div th:if="${success}"
-         style="color: #28a745; background:#e6f5ea; padding:0.8em; border-radius:6px; margin-bottom:1em;"
-         th:text="${success}">
-    </div>
+        <div class="col-12">
+            <label class="form-label fw-bold">Title:</label>
+            <input type="text" name="name" placeholder="School, Work, Hobby..." required class="form-control">
+        </div>
 
+        <div class="col-12">
+            <label class="form-label fw-bold">Color:</label>
+            <input type="color" name="color" value="#ff0000" required class="form-control form-control-color" style="width:80px; height:50px;">
+        </div>
 
-    <form th:action="@{/categories/add}"
-          method="post"
-          style="display:flex; flex-direction:column; gap:1em;">
-
-
-        <label style="font-weight:bold;">
-            Title:
-            <input type="text" name="name" placeholder="School, Work, Hobby..." required
-                   style="
-                       margin-top:0.3em;
-                       padding:0.7em;
-                       border:1px solid #ccc;
-                       border-radius:6px;
-                       width:100%;
-                   ">
-        </label>
-
-
-        <label style="font-weight:bold;">
-            Color:
-            <input type="color" name="color" value="#ff0000" required
-                   style="
-                       margin-top:0.5em;
-                       width:80px;
-                       height:40px;
-                       padding:0;
-                       border:1px solid #ccc;
-                       border-radius:6px;
-                       cursor:pointer;
-                   ">
-        </label>
-
-
-        <button type="submit"
-                style="
-                    margin-top:0.5em;
-                    padding:0.8em;
-                    background:#6ec1e4;
-                    color:white;
-                    font-weight:bold;
-                    border:none;
-                    border-radius:6px;
-                    cursor:pointer;
-                    font-size:15px;
-                    transition: background 0.2s;
-                "
-                onmouseover="this.style.background='#5ab3d6';"
-                onmouseout="this.style.background='#6ec1e4';">
-            Add category
-        </button>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary w-100 fw-bold">Add category</button>
+        </div>
 
     </form>
 

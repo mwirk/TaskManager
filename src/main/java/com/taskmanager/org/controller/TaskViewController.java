@@ -8,6 +8,7 @@ import com.taskmanager.org.model.User;
 import com.taskmanager.org.service.CategoryService;
 import com.taskmanager.org.service.TaskService;
 import com.taskmanager.org.service.UserService;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
-
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 @Controller
 @RequestMapping("/tasks")
 public class TaskViewController {
@@ -30,37 +36,52 @@ public class TaskViewController {
         this.categoryService = categoryService;
         this.userService = userService;
     }
+    public float calculateDonePercentage(LocalDateTime createdAt, LocalDateTime dueDate) {
 
+
+        if (createdAt == null || dueDate == null) {
+            return 0f;
+        }
+
+        long totalMinutes = Duration.between(createdAt, dueDate).toMinutes();
+
+        if (totalMinutes <= 0) {
+            return 0f;
+        }
+
+        long passedMinutes = Duration.between(createdAt, LocalDateTime.now()).toMinutes();
+
+        float percentage = (passedMinutes / (float) totalMinutes) * 100f;
+
+        if (percentage < 0) percentage = 0;
+        if (percentage > 100) percentage = 100;
+
+        return percentage;
+    }
     @GetMapping
-    public String tasksPage(@RequestParam(required = false) String title,
-                            @RequestParam(required = false) Category category,
+    public String tasksPage(@RequestParam(defaultValue = "0") int page,
+                            @RequestParam(required = false) String title,
+                            @RequestParam(required = false) Integer category,
                             @RequestParam(required = false) Status status,
+                            @RequestParam(required = false) String sort,
                             Model model) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByEmail(username).getFirst();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByEmail(auth.getName()).getFirst();
 
-        List<Task> tasks = taskService.findTaskByUser(user);
-
-        if (title != null && !title.isBlank()) {
-            tasks = tasks.stream()
-                    .filter(t -> t.getTitle().toLowerCase().contains(title.toLowerCase()))
-                    .toList();
+        Sort sortObj = Sort.unsorted();
+        if ("Status".equals(sort)) {
+            sortObj = Sort.by("status").ascending();
+        } else if ("Due date".equals(sort)) {
+            sortObj = Sort.by("dueDate").ascending();
         }
 
-        if (category != null) {
-            tasks = tasks.stream()
-                    .filter(t -> t.getCategoryId().getId() == category.getId())
-                    .toList();
-        }
-        if (status != null){
-            tasks = tasks.stream()
-                    .filter(t -> t.getStatus() == status)
-                    .toList();
-        }
+        Pageable pageable = PageRequest.of(page, 10, sortObj);
 
-        List<TaskViewDTO> dtos = tasks.stream()
+
+        Page<Task> tasksPage = taskService.findTasksFiltered(user, title, category, status, pageable);
+
+        List<TaskViewDTO> dtos = tasksPage.getContent().stream()
                 .map(task -> new TaskViewDTO(
                         task.getId(),
                         task.getTitle(),
@@ -70,16 +91,29 @@ public class TaskViewController {
                         task.getCategoryId(),
                         task.getCreatedAt(),
                         task.getUpdatedAt(),
-                        task.getUserId()
+                        task.getUserId(),
+                        calculateDonePercentage(task.getCreatedAt(), task.getDueDate())
                 ))
                 .toList();
 
         model.addAttribute("categories", categoryService.findAllCategories());
         model.addAttribute("tasks", dtos);
         model.addAttribute("statuses", Status.values());
+        model.addAttribute("to_doCounter",
+                taskService.findTaskByUser(user).stream().filter(t -> t.getStatus() == Status.TO_DO).count());
+
+        model.addAttribute("in_progressCounter",
+                taskService.findTaskByUser(user).stream().filter(t -> t.getStatus() == Status.IN_PROGRESS).count());
+
+        model.addAttribute("doneCounter",
+                taskService.findTaskByUser(user).stream().filter(t -> t.getStatus() == Status.DONE).count());
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", tasksPage.getTotalPages());
 
         return "tasks/list";
     }
+
     @GetMapping("/add")
     public String showCreateForm(Model model) {
         model.addAttribute("task", new TaskViewDTO());
@@ -175,4 +209,11 @@ public class TaskViewController {
         return "redirect:/tasks";
     }
 }
+
+
+
+
+
+
+
 

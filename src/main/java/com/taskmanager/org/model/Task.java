@@ -14,7 +14,7 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(nullable = false)
+    @Column(name="title", nullable = false)
     private String title;
     @Column(nullable = false)
     private String description;

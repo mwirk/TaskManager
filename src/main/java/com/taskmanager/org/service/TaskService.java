@@ -8,7 +8,9 @@ import com.taskmanager.org.repository.TaskRepository;
 import com.taskmanager.org.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +47,7 @@ public class TaskService {
 
     }
 
+
     public List<Task> findByStatusAndCategory(Status status, Category categoryId) {
         if (categoryId != null) {
             return taskRepository.findByStatusAndCategoryId(status, categoryId);
@@ -80,4 +83,11 @@ public class TaskService {
     public void save(Task task) {
         taskRepository.save(task);
     }
+
+
+    public Page<Task> findTasksFiltered(User user, String title, Integer categoryId, Status status, Pageable pageable) {
+        return taskRepository.findFiltered(user, title, categoryId, status, pageable);
+    }
+
+
 }

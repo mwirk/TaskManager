@@ -9,6 +9,10 @@ import com.taskmanager.org.model.User;
 import com.taskmanager.org.service.TaskService;
 import com.taskmanager.org.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -165,5 +169,54 @@ public class TaskController {
                 task.getUserId().getId()
         );
         return ResponseEntity.ok(response);
+    }
+    @GetMapping("/export/csv")
+    public ResponseEntity<Resource> exportCsvFile(@RequestParam(value = "userId") Integer userId) {
+        try {
+            List<Task> tasks;
+            if (userId != null) {
+                User user = userService.findById(userId).stream()
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException("User not found: "));
+                tasks = taskService.findTaskByUser(user);
+            }
+            else{
+                tasks = taskService.findAllTasks();
+            }
+            StringBuilder csvBuilder = new StringBuilder();
+            csvBuilder.append("Id,Title,Description,Status, DueDate, Category, CreatedAt, UpdatedAt\n");
+            for (Task task : tasks) {
+                csvBuilder
+                        .append(task.getId()).append(",")
+                        .append(task.getTitle()).append(",")
+                        .append(task.getDescription()).append(",")
+                        .append(task.getStatus()).append(",")
+                        .append(task.getDueDate()).append(",")
+                        .append(task.getCategoryId().getName()).append(",")
+                        .append(task.getCreatedAt()).append(",")
+                        .append(task.getUpdatedAt()).append(",")
+                        .append("\n");
+            }
+
+            byte[] csvBytes = csvBuilder.toString().getBytes("UTF-8");
+            ByteArrayResource resource = new ByteArrayResource(csvBytes);
+
+            HttpHeaders headers = new HttpHeaders();
+            String fileName = (userId != null)
+                    ? "tasks_" + userId + ".csv"
+                    : "tasks.csv";
+
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
+            headers.add(HttpHeaders.CONTENT_TYPE, "text/csv; charset=UTF-8");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentLength(csvBytes.length)
+                    .body(resource);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

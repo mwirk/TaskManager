@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/**").permitAll()
+                        .requestMatchers("/api/v1/tasks/export/csv").permitAll()
                         .requestMatchers("/", "/login", "/register", "/css/**").permitAll()
                         .anyRequest().authenticated()
                 )
