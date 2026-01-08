@@ -61,7 +61,7 @@ public class TaskViewController {
     @GetMapping
     public String tasksPage(@RequestParam(defaultValue = "0") int page,
                             @RequestParam(required = false) String title,
-                            @RequestParam(required = false) Integer category,
+                            @RequestParam(required = false) Long category,
                             @RequestParam(required = false) Status status,
                             @RequestParam(required = false) String sort,
                             Model model) {
@@ -124,7 +124,7 @@ public class TaskViewController {
     }
 
     @PostMapping("/add")
-    public String createDepartment(
+    public String createTask(
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam("category") Category category,
@@ -159,13 +159,13 @@ public class TaskViewController {
         return "redirect:/tasks";
     }
     @PostMapping("/delete/{id}")
-    public String deleteTask(@PathVariable int id, RedirectAttributes redirectAttributes) {
+    public String deleteTask(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         taskService.removeTask(taskService.findTaskById(id).getFirst());
         redirectAttributes.addFlashAttribute("success", "Task deleted");
         return "redirect:/tasks";
     }
     @GetMapping("/edit/{id}")
-    public String getEditForm(@PathVariable int id,Model model){
+    public String getEditForm(@PathVariable Long id,Model model){
         Task task = taskService.findTaskById(id).getFirst();
         List<Category> categories = categoryService.findAllCategories();
         model.addAttribute("categories", categories);
@@ -174,7 +174,7 @@ public class TaskViewController {
         return "tasks/editForm";
     }
     @PostMapping("/edit/{id}")
-    public String changeTask(@PathVariable int id,
+    public String changeTask(@PathVariable Long id,
                              @RequestParam("title") String title,
                              @RequestParam("description") String description,
                              @RequestParam("category") Category category,

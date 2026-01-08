@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Integer> {
-    List<Category> findCategoryById(Integer id);
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+    List<Category> findCategoryById(Long id);
 
 
 }

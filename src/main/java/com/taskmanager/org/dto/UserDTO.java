@@ -1,26 +1,39 @@
 package com.taskmanager.org.dto;
 
+import com.taskmanager.org.validation.ValidPassword;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class UserDTO {
 
-    private Integer id;
+    private Long id;
+
+    @NotBlank(message = "Name is required")
     private String name;
+
+    @Email(message = "Email has invalid format")
+    @NotBlank(message = "Email is required")
     private String email;
+
+    @Size(min = 6, message = "Password must be at least 6 characters")
+    @ValidPassword
     private String password;
 
     public UserDTO() {}
 
-    public UserDTO(Integer id, String name, String email) {
+    public UserDTO(Long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
     }
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -57,4 +70,10 @@ public class UserDTO {
         this.password = password;
     }
 }
+
+
+
+
+
+
 

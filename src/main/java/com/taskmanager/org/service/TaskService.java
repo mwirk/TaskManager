@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +27,7 @@ public class TaskService {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
     }
-
+    @Transactional
     public User addNewTask(User user, Task task) {
         if (user == null) {
             throw new IllegalArgumentException("User is null");
@@ -38,6 +40,7 @@ public class TaskService {
 
         return userRepository.save(user);
     }
+    @Transactional(readOnly = true)
     public List<Task> findTaskByUser(User user){
         if (user == null) {
             throw new IllegalArgumentException("User is null");
@@ -47,7 +50,7 @@ public class TaskService {
 
     }
 
-
+    @Transactional(readOnly = true)
     public List<Task> findByStatusAndCategory(Status status, Category categoryId) {
         if (categoryId != null) {
             return taskRepository.findByStatusAndCategoryId(status, categoryId);
@@ -55,37 +58,37 @@ public class TaskService {
             return taskRepository.findByStatus(status);
         }
     }
-
+    @Transactional(readOnly = true)
     public List<Task> findByStatus(Status status) {
         return taskRepository.findByStatus(status);
     }
-
+    @Transactional(readOnly = true)
     public List<Task> findByCategory(Category categoryId) {
         return taskRepository.findByCategoryId(categoryId);
     }
-
+    @Transactional(readOnly = true)
     public List<Task> findAllTasks() {
         return taskRepository.findAll();
     }
-
-    public Optional<Task> findById(Integer id) {
+    @Transactional(readOnly = true)
+    public Optional<Task> findById(Long id) {
         return taskRepository.findById(id);
     }
-
+    @Transactional
     public void removeTask(Task taskToBeRemoved) {
         taskRepository.delete(taskToBeRemoved);
     }
-
-    public List<Task> findTaskById(Integer id) {
+    @Transactional(readOnly = true)
+    public List<Task> findTaskById(Long id) {
         return taskRepository.findTaskById(id);
     }
-
+    @Transactional
     public void save(Task task) {
         taskRepository.save(task);
     }
 
-
-    public Page<Task> findTasksFiltered(User user, String title, Integer categoryId, Status status, Pageable pageable) {
+    @Transactional(readOnly = true)
+    public Page<Task> findTasksFiltered(User user, String title,Long categoryId, Status status, Pageable pageable) {
         return taskRepository.findFiltered(user, title, categoryId, status, pageable);
     }
 

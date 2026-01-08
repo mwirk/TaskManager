@@ -13,7 +13,7 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    private Long id;
     @Column(name="title", nullable = false)
     private String title;
     @Column(nullable = false)
@@ -34,11 +34,13 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User userId;
+    @Column(nullable = true)
+    private String photo;
 
     public Task() {}
 
 
-    public Task(Integer id, String title, String description, Status status,
+    public Task(Long id, String title, String description, Status status,
                 LocalDateTime dueDate, Category categoryId,
                 LocalDateTime createdAt, LocalDateTime updatedAt, User userId) {
         this.id = id;
@@ -51,7 +53,7 @@ public class Task {
         this.updatedAt = updatedAt;
         this.userId = userId;
     }
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -91,7 +93,7 @@ public class Task {
         this.status = status;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -121,5 +123,13 @@ public class Task {
 
     public void setUserId(User userId) {
         this.userId = userId;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

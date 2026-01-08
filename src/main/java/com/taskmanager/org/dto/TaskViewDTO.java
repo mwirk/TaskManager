@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class TaskViewDTO {
 
-    private Integer id;
+    private Long id;
     private String title;
     private String description;
     private Status status;
@@ -21,7 +21,7 @@ public class TaskViewDTO {
 
     public TaskViewDTO() {}
 
-    public TaskViewDTO(Integer id,
+    public TaskViewDTO(Long id,
                        String title,
                        String description,
                        Status status,
@@ -30,7 +30,7 @@ public class TaskViewDTO {
                        LocalDateTime createdAt,
                        LocalDateTime updatedAt,
                        User userId,
-                       float donePercentage) {
+                      float donePercentage) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -43,7 +43,7 @@ public class TaskViewDTO {
         this.donePercentage = donePercentage;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

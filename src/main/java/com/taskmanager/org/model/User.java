@@ -2,6 +2,7 @@ package com.taskmanager.org.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.*;
 @Entity
@@ -11,7 +12,7 @@ public class User {
     @Id
     @SequenceGenerator(name = "customer_id_sequence", sequenceName = "customer_id_sequence")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_id_sequence")
-    private Integer id;
+    private Long id;
     @Column(nullable = false, length = 50)
     private String name;
     @Column(nullable=false, unique = true)
@@ -20,19 +21,23 @@ public class User {
     private String password;
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
     private List<Task> tasks = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles;
+
 
 
     public User() {}
 
-    public User(Integer id, String name, String email, String password) {
+    public User(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+
     }
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -45,7 +50,7 @@ public class User {
 
 
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -72,25 +77,19 @@ public class User {
         return Objects.equals(email, user.email);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, email);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

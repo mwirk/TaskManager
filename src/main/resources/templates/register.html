@@ -11,19 +11,26 @@
 
 <body style="background:#f0f4f8; font-family: Arial, sans-serif;">
 
-<div class="d-flex justify-content-center align-items-center vh-100">
-
+<div class="d-flex flex-column justify-content-center align-items-center vh-100">
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
     <div class="card shadow-sm p-4" style="width:100%; max-width:380px; border-radius:12px;">
 
         <h2 class="text-center mb-4" style="font-size:26px; color:#333;">Register</h2>
 
-        <form th:action="@{/register}" th:object="${user}" method="post" class="d-flex flex-column gap-3">
+        <form th:action="@{/register}" th:object="${user}" method="post" class="d-flex flex-column gap-3" novalidate>
 
-            <input type="text" th:field="*{name}" placeholder="Name" required class="form-control form-control-lg">
 
-            <input type="email" th:field="*{email}" placeholder="Email" required class="form-control form-control-lg">
+        <input type="text" th:field="*{name}" class="form-control form-control-lg" placeholder="Name">
+            <div class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 
-            <input type="password" th:field="*{password}" placeholder="Password" required class="form-control form-control-lg">
+            <input type="email" th:field="*{email}" class="form-control form-control-lg" placeholder="Email">
+            <div class="text-danger small" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
+            <input type="password" th:field="*{password}" class="form-control form-control-lg" placeholder="Password">
+            <div class="text-danger small" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+
+
 
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 

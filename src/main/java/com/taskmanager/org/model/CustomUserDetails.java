@@ -1,26 +1,22 @@
 package com.taskmanager.org.model;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import java.util.Collection;
-import java.util.List;
+
 
 public class CustomUserDetails implements UserDetails {
 
-    private final Integer id;
+    private final Long id;
     private final String name;
     private final String email;
     private final String password;
     private final List<GrantedAuthority> authorities;
 
-    public CustomUserDetails(Integer id, String name, String email, String password, List<GrantedAuthority> authorities) {
+    public CustomUserDetails(Long id, String name, String email, String password, List<GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -32,7 +28,7 @@ public class CustomUserDetails implements UserDetails {
         return name;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

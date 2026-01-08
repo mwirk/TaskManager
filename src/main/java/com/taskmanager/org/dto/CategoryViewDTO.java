@@ -2,23 +2,23 @@ package com.taskmanager.org.dto;
 
 public class CategoryViewDTO {
 
-    private Integer id;
+    private Long id;
     private String name;
     private String color;
 
     public CategoryViewDTO() {}
 
-    public CategoryViewDTO(Integer id, String name, String color) {
+    public CategoryViewDTO(Long id, String name, String color) {
         this.id = id;
         this.name = name;
         this.color = color;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

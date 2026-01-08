@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TaskRepository extends JpaRepository<Task, Integer> {
+public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByStatus(Status status);
     List<Task> findByUserId(User user);
-    List<Task> findTaskById(Integer id);
+    List<Task> findTaskById(Long id);
     List<Task> findByStatusAndCategoryId(Status status, Category categoryId);
     List<Task> findByCategoryId(Category categoryId);
     List<Task> findAll();
@@ -31,7 +31,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     """)
     Page<Task> findFiltered(@Param("user") User user,
                             @Param("title") String title,
-                            @Param("categoryId") Integer categoryId,
+                            @Param("categoryId") Long categoryId,
                             @Param("status") Status status,
                             Pageable pageable);
 

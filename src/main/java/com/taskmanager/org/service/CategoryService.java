@@ -6,6 +6,7 @@ import com.taskmanager.org.repository.CategoryRepository;
 import com.taskmanager.org.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,17 +18,19 @@ public class CategoryService {
     public CategoryService(CategoryRepository categoryRepository){
         this.categoryRepository = categoryRepository;
     }
+    @Transactional
     public Category addNewCategory(Category newCategory){
         return categoryRepository.save(newCategory);
     }
+    @Transactional
     public void removeCategory(Category category){
         categoryRepository.delete(category);
     }
-
-    public List<Category> findById(Integer id) {
+    @Transactional(readOnly = true)
+    public List<Category> findById(Long id) {
         return categoryRepository.findCategoryById(id);
     }
-
+    @Transactional(readOnly = true)
     public List<Category> findAllCategories() {
         return categoryRepository.findAll();
     }

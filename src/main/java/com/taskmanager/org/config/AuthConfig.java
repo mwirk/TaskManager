@@ -25,4 +25,5 @@ public class AuthConfig {
         authProvider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(authProvider);
     }
+
 }

@@ -39,7 +39,7 @@ public class CategoryViewController {
     }
 
     @PostMapping("/add")
-    public String createDepartment(
+    public String createCategory(
             @RequestParam("name") String name,
             @RequestParam("color") String color,
             RedirectAttributes redirectAttributes,
@@ -48,11 +48,11 @@ public class CategoryViewController {
 
         if (name == null || name.trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Name is required");
-            return "redirect:/color/add";
+            return "redirect:/categories/add";
         }
         if (color == null || color.trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Color is required");
-            return "redirect:/color/add";
+            return "redirect:/categories/add";
         }
 
 
